@@ -22,13 +22,13 @@ Repo ini dibuat untuk memenuhi **Penugasan Praktikum 1** tentang Git dan Version
 
 ### 1. Clone Repository *(sekali saja di awal)*
 ```bash
-git clone https://github.com/username/praktikum-git-kelompok.git
-cd praktikum-git-kelompok
+git clone https://github.com/username/penugasan1-kelompok-5-B.git
+cd penugasan1-kelompok-5-B
 ```
 
 ### 2. Buat Branch Pribadi
 ```bash
-git checkout -b nama-kamu   # contoh: git checkout -b talitha
+git checkout -b nama-kamu   # contoh: git checkout -b nadhifa
 ```
 
 ### 3. Sebelum Mulai Kerja — Selalu Pull Dulu
@@ -39,7 +39,7 @@ git pull origin main
 ### 4. Simpan Perubahan
 ```bash
 git add .
-git commit -m "Deskripsi singkat perubahan"
+git commit -m "ubah frontend"
 git push -u origin nama-kamu
 ```
 
@@ -47,15 +47,5 @@ git push -u origin nama-kamu
 - Buka repo di GitHub
 - Klik **"Compare & Pull Request"**
 - Isi deskripsi → klik **Create Pull Request**
-- Tunggu review dan merge dari leader
 
 ---
-
-## Rules
-
-- Jangan kerja langsung di branch `main`
-- Jangan hapus folder/file milik anggota lain
-- Jangan hapus shapefile (banyak ekstensi)
-- Setiap anggota hanya edit folder/notebook bagian sendiri di `/src`
-- Folder kosong wajib ada file `.gitkeep` agar muncul di repo
-- Kalau ganti device, lakukan `git pull` sebelum mulai edit
