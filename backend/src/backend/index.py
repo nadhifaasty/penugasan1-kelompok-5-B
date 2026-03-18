@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+import json
 
 app = FastAPI()
 
@@ -10,6 +11,10 @@ class Item(BaseModel):
     price: int
 
 #GET
+@app.get("/")
+def read_root():
+    return {"message": "Selamat datang di API Kelompok 5"}
+
 @app.get("/items")
 def get_items():
     return items
@@ -18,6 +23,9 @@ def get_items():
 @app.post("/items")
 def create_item(item: Item):
     items.append(item.dict())
+
+    with open("items.json", "w") as file:
+        json.dump(items, file)
     return item
 
 # PUT
