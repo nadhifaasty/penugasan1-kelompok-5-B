@@ -1,14 +1,27 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import json
+import os
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-items = []
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+if STATIC_DIR.exists():
+    with open(STATIC_DIR, "r") as file:
+        items = json.load(file)
+else:
+    items = []
 
 class Item(BaseModel):
-    name: str
-    price: int
+    image_url: str
+    audio_url: str
+    gif_url: str
 
 #GET
 @app.get("/")
