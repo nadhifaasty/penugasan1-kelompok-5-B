@@ -12,8 +12,10 @@ STATIC_DIR = BASE_DIR / "static"
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
-if STATIC_DIR.exists():
-    with open(STATIC_DIR, "r") as file:
+ITEMS_FILE = BASE_DIR / "items.json"
+
+if ITEMS_FILE.exists():
+    with open(ITEMS_FILE, "r") as file:
         items = json.load(file)
 else:
     items = []
@@ -43,16 +45,21 @@ def create_item(item: Item):
 
 # PUT
 @app.put("/items/{item_id}")
-def update_item(item_i: int, updated_item: Item):
-    if item_i < len(items):
-        items[item_i] = updated_item.dict()
+def update_item(item_id: int, updated_item: Item):  
+    if item_id < len(items):                         
+        items[item_id] = updated_item.dict()         
+        with open("items.json", "w") as file:        
+            json.dump(items, file)
         return updated_item
     return {"error": "Item not found"}
 
 # DELETE
 @app.delete("/items/{item_id}")
-def delete_item(item_i: int):
-    if item_i < len(items):
-        deleted_item = items.pop(item_i)
+def delete_item(item_id: int):              
+    if item_id < len(items):               
+        deleted_item = items.pop(item_id)  
+        with open("items.json", "w") as file:  
+            json.dump(items, file)
         return {"message": "Item deleted", "item": deleted_item}
     return {"error": "Item not found"}
+
