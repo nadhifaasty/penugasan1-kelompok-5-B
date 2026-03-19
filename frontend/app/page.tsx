@@ -1,7 +1,7 @@
 "use client";
- 
+
 import { useState, useRef, useCallback } from "react";
- 
+
 const CAT_MEMES = [
   {
     id: 1,
@@ -51,186 +51,111 @@ const CAT_MEMES = [
     caption: "u ii a ii a ii u ii a i",
     emoji: "😸",
   },
+  {
+    id: 7,
+    name: "yapapa cat",
+    videoUrl: "/videos/meme7.mp4",
+    soundUrl: "/audio/meme7.mp3",
+    caption: "yapapa hmm yapapa punya papa hama",
+    emoji: "😯",
+  },
+  {
+    id: 8,
+    name: "Nazi's cat",
+    videoUrl: "/videos/meme8.mp4",
+    soundUrl: "/audio/meme8.mp3",
+    caption: "germany's cat",
+    emoji: "✠︎",
+  },
+  {
+    id: 9,
+    name: "ojo ojo",
+    videoUrl: "/videos/meme9.mp4",
+    soundUrl: "/audio/meme9.mp3",
+    caption: "ojo ojo ojo ojo ojo ojo ojo ojo ojo ojo ojo ojo ojo",
+    emoji: "😡",
+  },
 ];
- 
+
 export default function Home() {
   const [activeId, setActiveId] = useState<number | null>(null);
- 
+
   // Simpan ref video per id
   const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({});
   // Simpan audio yang sedang jalan
   const currentAudio = useRef<HTMLAudioElement | null>(null);
- 
+
   const handleClick = useCallback((id: number, soundUrl: string) => {
     // Stop & reset audio sebelumnya
     if (currentAudio.current) {
       currentAudio.current.pause();
       currentAudio.current.currentTime = 0;
     }
- 
+
     // Restart video dari awal
     const video = videoRefs.current[id];
     if (video) {
       video.currentTime = 0;
       video.play().catch((e) => console.warn("Video error:", e));
     }
- 
+
     // Play audio baru
     const audio = new Audio(soundUrl);
     audio.play().catch((e) => console.warn("Audio error:", e));
     currentAudio.current = audio;
- 
+
     // Tampilkan overlay MEOW
     setActiveId(id);
     setTimeout(() => setActiveId(null), 800);
   }, []);
- 
+
   return (
-    <main style={styles.main}>
-      <header style={styles.header}>
-        <h1 style={styles.title}>🐱 Cat Meme Gallery</h1>
-        <p style={styles.subtitle}>Klik!</p>
+    <main className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-indigo-100 font-sans p-4 pb-10">
+      <header className="text-center py-12 px-6 border-b-4 border-dashed border-purple-300 mb-8">
+        <h1 className="text-4xl md:text-5xl font-black text-purple-900 mb-2 tracking-tight drop-shadow-lg">
+          🐱 Cat Meme Gallery
+        </h1>
+        <p className="text-lg text-purple-700 font-medium">Klik untuk memainkan meme!</p>
       </header>
- 
-      <div style={styles.grid}>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
         {CAT_MEMES.map((meme) => (
           <div
             key={meme.id}
             onClick={() => handleClick(meme.id, meme.soundUrl)}
-            style={{
-              ...styles.card,
-              ...(activeId === meme.id ? styles.cardActive : {}),
-            }}
+            className={`bg-white rounded-2xl border-4 border-purple-200 overflow-hidden cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:border-purple-400 shadow-lg ${
+              activeId === meme.id ? "scale-95 shadow-purple-500/50 border-purple-500" : ""
+            }`}
           >
-            <div style={styles.imageWrapper}>
+            <div className="relative w-full h-48 bg-gradient-to-br from-purple-50 to-blue-50 overflow-hidden">
               <video
                 ref={(el) => { videoRefs.current[meme.id] = el; }}
                 src={meme.videoUrl}
-                style={styles.image}
+                className="w-full h-full object-cover"
                 loop
                 muted
                 playsInline
-                preload="auto"
+                preload="metadata"
+                title={`Video meme ${meme.name}`}
               />
               {activeId === meme.id && (
-                <div style={styles.overlay}>
-                  <span style={styles.meowText}>! 🔊</span>
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center animate-pulse">
+                  <span className="text-white text-2xl font-bold tracking-wider drop-shadow-2xl">🔊 MEOW!</span>
                 </div>
               )}
             </div>
-            <div style={styles.cardBody}>
-              <span style={styles.emoji}>{meme.emoji}</span>
-              <h2 style={styles.memeName}>{meme.name}</h2>
-              <p style={styles.caption}>"{meme.caption}"</p>
+            <div className="p-4 bg-gradient-to-r from-white to-purple-50">
+              <span className="text-2xl block mb-2">{meme.emoji}</span>
+              <h2 className="text-lg font-bold text-purple-900 mb-1">{meme.name}</h2>
+              <p className="text-sm text-purple-700 italic">"{meme.caption}"</p>
             </div>
           </div>
         ))}
       </div>
- 
-      <footer style={styles.footer}>
+
+      <footer className="text-center mt-12 text-purple-600 font-medium animate-bounce">
         <p>Play with 🐾</p>
       </footer>
     </main>
   );
 }
- 
-const styles: Record<string, React.CSSProperties> = {
-  main: {
-    minHeight: "100vh",
-    backgroundColor: "#fdf6ec",
-    fontFamily: "'Segoe UI', sans-serif",
-    padding: "0 0 40px 0",
-  },
-  header: {
-    textAlign: "center",
-    padding: "40px 20px 20px",
-    borderBottom: "2px dashed #e8c99a",
-    marginBottom: "32px",
-  },
-  title: {
-    fontSize: "2.4rem",
-    margin: "0 0 8px 0",
-    color: "#3d2c14",
-    fontWeight: 800,
-    letterSpacing: "-0.5px",
-  },
-  subtitle: {
-    color: "#8a6a3b",
-    fontSize: "1rem",
-    margin: 0,
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-    gap: "24px",
-    maxWidth: "960px",
-    margin: "0 auto",
-    padding: "0 20px",
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    border: "2px solid #e8d5b7",
-    overflow: "hidden",
-    cursor: "pointer",
-    transition: "transform 0.15s ease, box-shadow 0.15s ease",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-    userSelect: "none",
-  },
-  cardActive: {
-    transform: "scale(0.96)",
-    boxShadow: "0 0 0 3px #f4a535",
-  },
-  imageWrapper: {
-    position: "relative",
-    width: "100%",
-    height: "200px",
-    backgroundColor: "#f5ede0",
-    overflow: "hidden",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    display: "block",
-  },
-  overlay: {
-    position: "absolute",
-    inset: 0,
-    backgroundColor: "rgba(0,0,0,0.45)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  meowText: {
-    color: "#fff",
-    fontSize: "1.6rem",
-    fontWeight: 800,
-    letterSpacing: "1px",
-    textShadow: "0 2px 6px rgba(0,0,0,0.5)",
-  },
-  cardBody: {
-    padding: "14px 16px",
-  },
-  emoji: {
-    fontSize: "1.2rem",
-  },
-  memeName: {
-    fontSize: "1.05rem",
-    fontWeight: 700,
-    color: "#3d2c14",
-    margin: "4px 0 6px",
-  },
-  caption: {
-    fontSize: "0.85rem",
-    color: "#7a5c30",
-    margin: 0,
-    fontStyle: "italic",
-  },
-  footer: {
-    textAlign: "center",
-    marginTop: "40px",
-    color: "#b08858",
-    fontSize: "0.85rem",
-  },
-};
